@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Shorts Toolkit</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 40px; background-color: #f0f2f5; }
+        .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
+        input { padding: 12px; width: 80%; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 15px; font-size: 16px; }
+        button { padding: 12px 25px; background-color: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        button:hover { background-color: #0056b3; }
+        #result { margin-top: 25px; text-align: left; background: #f8f9fa; padding: 15px; border-radius: 8px; white-space: pre-wrap; display: none; border-left: 5px solid #007bff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🎥 AI Shorts Strategist</h2>
+        <p>আপনার ভিডিওর টপিক লিখুন:</p>
+        <input type="text" id="topic" placeholder="যেমন: Bike modification বা Cooking tips">
+        <br>
+        <button onclick="generateAI()">Generate Idea ✨</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function generateAI() {
+            const topic = document.getElementById('topic').value;
+            const resDiv = document.getElementById('result');
+            if(!topic) { alert("দয়া করে একটি টপিক লিখুন!"); return; }
+            
+            resDiv.style.display = "block";
+            resDiv.innerText = "AI চিন্তা করছে... একটু অপেক্ষা করুন ⏳";
+            
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ topic: topic })
+                });
+                const result = await response.json();
+                if(result.success) {
+                    resDiv.innerText = result.data;
+                } else {
+                    resDiv.innerText = "Error: API কাজ করছে না! সেটিংস চেক করুন।";
+                }
+            } catch (e) {
+                resDiv.innerText = "সার্ভারের সাথে কানেক্ট করা যাচ্ছে না।";
+            }
+        }
+    </script>
+</body>
+</html>
